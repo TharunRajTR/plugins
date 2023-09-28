@@ -3,7 +3,6 @@
 import sys
 import re
 import json
-import ssl
 
 class NginxServerMonitoring():
     def __init__(self, config_data) :
@@ -12,7 +11,6 @@ class NginxServerMonitoring():
         self.data['plugin_version'] = self._config_data_['plugin_version']
         self.data['heartbeat_required'] = self._config_data_['heartbeat_required']
         self.data['applog']=self._config_data_['applog']
-        self.unverified_context = ssl._create_unverified_context()
     
     def _get_request_data_(self):
         PYTHON_MAJOR_VERSION = sys.version_info[0]    
@@ -32,7 +30,7 @@ class NginxServerMonitoring():
                 opener = urlconnection.build_opener(auth_handler, proxy_support)
                 urlconnection.install_opener(opener)
 
-            response = urlconnection.urlopen(url, timeout=self._config_data_['timeout'], context=self.unverified_context)
+            response = urlconnection.urlopen(url, timeout=self._config_data_['timeout'])
             return response.read()
         except Exception as e:
             self.data['status'] = 0
